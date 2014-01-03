@@ -1,0 +1,15 @@
+{
+	"name": "Trello Poker",
+	"authors" : [
+		{
+			"name" : "Felipe Girotti",
+			"email" : "felipe.girotti@gmail.com"
+		}
+	],
+	"autoload" : {
+		"pdr-0" : {"TrelloPoker" : "src/"}
+	},
+	"require" : {
+		"respect/config": "dev-master"
+	}
+}

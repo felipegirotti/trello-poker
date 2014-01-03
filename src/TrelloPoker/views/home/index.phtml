@@ -1,0 +1,23 @@
+{% extends "template/base.phtml" %}
+{% block scriptjs %}
+    {{ parent() }}
+    <script src="assets/js/pages/index.js"></script>
+{% endblock %}
+{% block title %}Trello Planing Poker{% endblock %}
+{% block container %}
+<div class="meio-container">
+    <div class="jumbotron">
+        <center>
+            <h1>Trello Poker</h1>							
+        </center>
+    </div
+    <div class="row trello-visible">
+        <div class="col-lg-12">
+            <h2>Selecione um board</h2>
+            <div id="boards" class="nav"></div>
+        </div>
+    </div>
+    <hr>
+</div>
+{% endblock %}
+

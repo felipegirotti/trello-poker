@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>{% block title %}{% endblock %}</title>
+        {% block stylesheet %}
+		<link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="/assets/css/trello.css" />
+        {% endblock %}
+        {% block scriptjs %}
+		<!-- The client library requires jQuery  -->
+		<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+		<script src="/assets/js/bootstrap.min.js"></script>
+		<script src="https://api.trello.com/1/client.js?key=dc160d013f905ffbb58ae844f79384ad"></script>
+		<script src="/assets/js/trello-poker.js"></script>				
+        <script src="/assets/js/TrelloRender.js"></script>
+        {% endblock %}
+    </head>
+    <body>		
+		<div class="container" >
+            <div class="header">
+                <div class="pull-right"><span class="trello-user"></span></div>
+                <ul class="nav nav-pills pull-right">
+                    <li class="active"><a href="/">Home</a></li>
+                    <li><a href="/my" id="my-pokers-link">Meus Pokers</a></li>
+                    <li><a href="/">Contato</a></li>
+                </ul>
+                
+                <h3 class="text-muted">{% block nomeHeader %}Trello Poker{% endblock %}</h3>
+            </div>
+			<div id="container">
+                {% block container %}
+                
+                {% endblock %}
+				
+				<footer>
+					{% block footer %}&COPY; Trello Poker{% endblock %}                     
+                </footer>
+			</div>
+		</div>
+		
+    </body>
+</html>
+

@@ -1,0 +1,15 @@
+{% extends "template/base.phtml" %}
+{% block title %}Meus Pokers{% endblock %}
+{% block scriptjs %}
+    {{ parent() }}
+    <script src="assets/js/pages/mypoker.js"></script>
+{% endblock %}
+{% block container %}    
+<h3>Meu jogos</h3>
+    {% for key, poker in pokers %}
+        <ul>
+            <li>{{ poker.nome }} - Membros - {{  }}</li>
+        </ul>
+    {% endfor %}
+{% endblock %}
+
