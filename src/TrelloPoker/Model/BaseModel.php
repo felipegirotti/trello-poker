@@ -19,6 +19,12 @@ class BaseModel
      * @var \Respect\Relational\Db
      */
     protected $_db;
+    
+    /**
+     *
+     * @var \PDO
+     */
+    protected $_conn;
         
     public function __construct(\Respect\Relational\Mapper $mapper,
         \Respect\Relational\Db $db) {

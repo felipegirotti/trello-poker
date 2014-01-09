@@ -1,0 +1,139 @@
+{% extends "template/base.phtml" %}
+{% block scriptjs %}
+    {{ parent() }}
+    <script src="/assets/js/pages/play.js"></script>
+{% endblock %}
+{% block title %}Trello Poker | {{ data.poker.nome }}{% endblock %}
+{% block container %}
+<div class="meio-container">
+    <div class="jumbotron">
+        <center>
+            <h1>{{ data.poker.nome }}</h1>							
+        </center>
+    </div>
+    <div class="row trello-visible">
+        <div id="game-poker" data-id-poker="{{ data.poker.id }}" class="col-lg-8">
+            <div id="card-current" data-card-id="{{ data.card.card_id }}" data-card-poker="{{ data.card.id }}">
+                <div id="card-game-vote" class="jumbotron">
+                    
+                </div>
+                <div id="card-info"></div>
+                <div id="card-game">
+                    
+                        <form class="form-game-pmeter">
+                            <div class="form-group">
+                                <label for="dificuldade">Dificuldade Inerente - Dificuldade ou complexidade de implementação</label>
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <select name="dificuldade" id="dificuldade" class="form-control require">
+                                            <option value="">Selecione</option>
+                                            <option value="0">0 - Nenhum</option>
+                                            <option value="1">1 - Baixo</option>
+                                            <option value="2">2 - Médio</option>
+                                            <option value="3">3 - Alto</option>
+                                        </select>                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="linhas">Número de Linhas - Número de Linhas a serem codificadas</label>
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <select name="linhas" id="linhas" class="form-control require">
+                                            <option value="">Selecione</option>
+                                            <option value="0">0 - Nenhum</option>
+                                            <option value="1">1 - Baixo</option>
+                                            <option value="2">2 - Médio</option>
+                                            <option value="3">3 - Alto</option>
+                                        </select>                                        
+                                    </div>                                    
+                                </div>                                
+                            </div>
+                            <div class="form-group">
+                                <label for="impacto">Impacto - Impacto no funcionando de funcionalidades pré-existentes e/ou na novas</label>
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <select name="impacto" id="impacto" class="form-control require">
+                                            <option value="">Selecione</option>
+                                            <option value="0">0 - Nenhum</option>
+                                            <option value="1">1 - Baixo</option>
+                                            <option value="2">2 - Médio</option>
+                                            <option value="3">3 - Alto</option>
+                                        </select>                                        
+                                    </div>                                        
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label for="vote">Voto</label>
+                                        <div class="row">
+                                            <div class="col-xs-6">
+                                                <select id="vote" name="vote" class="form-control require">
+                                                    <option value="0">0</option>
+                                                    <option value="0.5">0.5</option>
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                    <option value="5">5</option>
+                                                    <option value="8">8</option>
+                                                    <option value="13">13</option>
+                                                    <option value="21">21</option>                                                    
+                                                </select>                                                
+                                            </div>                                        
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group hide">
+                                        <label for="vote-total">Voto Total</label>
+                                        <div class="row">
+                                            <div class="col-xs-6">
+                                                <select id="vote-total" name="vote-total" class="form-control ">
+                                                    <option value="0">0</option>
+                                                    <option value="0.5">0.5</option>
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                    <option value="5">5</option>
+                                                    <option value="8">8</option>
+                                                    <option value="13">13</option>
+                                                    <option value="21">21</option>                                                    
+                                                </select>                                                                                        
+                                            </div>                                        
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <input type="hidden" name="card_id" value="{{ data.card.id }}" />
+                            <input type="hidden" name="poker_id" value="{{ data.poker.id }}" />
+                            <button class="btn btn-success" id="btn-vote">Votar</button>
+                            <span class="owner-game" >
+<!--                                <button class="btn btn-primary" id="btn-pular">Pular</button>-->
+                                <button class="btn btn-primary" id="btn-fechar">Fechar</button>                                
+                            </span>
+                        </form>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <h3>Usuários</h3>
+            <ul id="users">
+                {% for user in data.users %}
+                <li class="status-{{ user.logged == 1 ? 'on' : 'off' }}" data-id-member="{{ user.member_id }}">
+                    {{ user.fullname }}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <hr>
+</div>
+<input type="hidden" id="id-owner" value="{{ data.poker.member_id }}"
+{% endblock %}
+
+
+
+

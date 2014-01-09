@@ -3,7 +3,7 @@ $(function() {
     trelloPoker = new TrelloPoker();
     trelloPoker.authorize(TrelloPokerIndex);
     //EVENTO DE CLICK NO BOARD
-    $('#boards a').live('click', function(e) {
+    $('#boards a.board').live('click', function(e) {
         e.preventDefault();
         trelloPoker.cardsMembers(this.id, $(this));
         return false;
@@ -44,8 +44,10 @@ TrelloPokerIndex = {
     addToPoker: function(form) {
         var data;
         data = form.serialize();
-        $.post('/poker/add', data, function(response) {
-            form.empty().remove();
+        $.post('/poker/add', data, function(response) {            
+            form.empty();
+            if (response.success) 
+               form.html(response.success.message);
         });
     }
 };
