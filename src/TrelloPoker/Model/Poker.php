@@ -129,7 +129,7 @@ class Poker extends BaseModel
         
         $this->_conn= $this->_db->getConnection();
        
-        $sql = "SELECT mhc.*, mem.id, mem.member_id, mem.fullname, mem.updated_at, mem.logged FROM membro mem "
+        $sql = "SELECT mhc.*, mem.id, mem.member_id, mem.fullname, mem.updated_at, mem.logged, mem.update_page FROM membro mem "
                 . "  LEFT JOIN membro_has_card mhc ON mem.id = mhc.membro_id AND mhc.card_id = ? "
                 . " WHERE  "
                 . " mem.poker_id = ? ";        
@@ -220,10 +220,10 @@ class Poker extends BaseModel
             throw new \InvalidArgumentException('Parâmetros inválidos');
         
         $this->isOwnerGame($data['card_id'], $data['member_id']);
-        
+        $card = $this->_mapper->card[$data['card_id']]->fetch();        
         $card->pontuacao = $data['pontuacao'];
         $card->updated_at = date('Y-m-d H:i:s'); 
-        $card->status = self::STATUS_INATIVO;
+        $card->status = self::STATUS_INATIVO;        
         $this->_mapper->card->persist($card);
         $this->_mapper->flush();
         return $card->card_id;
@@ -256,12 +256,14 @@ class Poker extends BaseModel
             $this->_conn = $this->_db->getConnection();
             $this->_conn->beginTransaction();
             foreach ($membroHasCards as $card) {
-                var_dump($card);die;
+                
                 $stmt = $this->_conn->prepare('DELETE FROM membro_has_card WHERE card_id = ?');
-                $stmt->execute(array($card->card_id));
-                //$stmt = $this->_conn->prepare('UPDATE FROM membro WHERE card_id');
+                $stmt->execute(array($card->card_id->id));
+                $stmt = $this->_conn->prepare('UPDATE membro SET update_page = 1 WHERE poker_id = ?');
+                $stmt->execute(array($card->card_id->poker_id));
             }
             $this->_conn->commit();
+            return true;
         } catch (\Exception $e) {
             $this->_conn->rollBack();
             throw new \Exception('Houve um erro durante o regame');

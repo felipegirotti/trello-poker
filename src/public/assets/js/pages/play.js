@@ -69,6 +69,12 @@ TrelloPokerPlay = {
             card_id : $('div[data-card-id]').attr('data-card-poker')
         };
         $.post('/poker/play/users/', dataPost, function (response) {
+            var reloadPage = response.users.filter(function(user){
+                return user.member_id == TrelloPokerPlay.user.id && user.update_page == 1;
+            });
+            if (reloadPage.length > 0) {
+                location.reload();
+            }
             var objHtml = TrelloRender.renderUsersPlay(response, TrelloPokerPlay.user.id);
             $('#users').html(objHtml.users);
             $('#card-game-vote').html(objHtml.votes);
@@ -161,7 +167,17 @@ TrelloPokerPlay = {
         });
     },
     regame: function(cardId) {
-        if (this.isOwner())
-            $.post('/poker/play/regame', {poker_id: $('input[name="poker_id"]').val(),card_id : cardId, member_id : TrelloPokerPlay.user.id});
+        if (this.isOwner()) {
+            var dataPost = {
+                poker_id: $('input[name="poker_id"]').val(),
+                card_id : cardId,
+                member_id : TrelloPokerPlay.user.id
+            };
+            $.post('/poker/play/regame', dataPost, function(response) {                
+                if (response.success && response.success.code == 202) {
+                    location.reload();
+                }
+            });
+        }
     }
 };

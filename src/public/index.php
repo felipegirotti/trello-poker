@@ -49,6 +49,10 @@ $router->post('/poker/play/regame', function() use ($model) {
    $data = $_POST;
    try {
        $regame = $model->regame($data);
+       if ($regame) {
+           Functions::headerHttpCode(202);
+           Functions::renderJson(array('success' => array('mensagem' => 'Regame com sucesso', 'code' => 202)));
+       }
    } catch (\Exception $e) {
        Functions::headerException($e);
    }

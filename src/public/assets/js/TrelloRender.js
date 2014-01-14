@@ -24,7 +24,7 @@ TrelloRender = {
         html += '<div>'+ dataCard.desc +'</div>';
         return html;
     },
-    renderUsersPlay: function(dataUsers, memberId) {
+    renderUsersPlay: function(dataUsers, memberId, isOwner) {
         var html = { users: '', votes : '<div class="row">', totalUsers: 0, totalVotes : 0, memberIsVoted: false};
         html.totalUsers = dataUsers.users.length;
         html.totalVotes = dataUsers.users.filter(function(objUser) {return objUser.pontuacao !== null}).length;
@@ -63,7 +63,7 @@ TrelloRender = {
         var html = '<div class="alert alert-danger validate-error">'+ msg +'</div>';                       
         el.before(html);
     },
-    listCards: function(dataCard, vote, isOwner) {        
+    listCards: function(dataCard, vote) {        
         var html = '';
         html += '<a href="'+ dataCard.url +'" target="_blank">';
         html += dataCard.name.replace(/\(.*?\)/, '');
