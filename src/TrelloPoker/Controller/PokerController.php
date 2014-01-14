@@ -37,7 +37,7 @@ class PokerController extends BaseController
             $response = $this->_model->insertPoker($data);
             Functions::headerHttpCode(201);
             Functions::renderJson($response);
-        } catch (\Exception $e) {
+        } catch (\Exception $e) {           
             Functions::headerException(new \Exception('Houve um erro durante a inserção do poker'));
         }
         

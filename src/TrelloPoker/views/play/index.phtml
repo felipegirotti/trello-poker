@@ -14,10 +14,11 @@
     <div class="row trello-visible">
         <div id="game-poker" data-id-poker="{{ data.poker.id }}" class="col-lg-8">
             <div id="card-current" data-card-id="{{ data.card.card_id }}" data-card-poker="{{ data.card.id }}">
+                
+                <div id="card-info"></div>
                 <div id="card-game-vote" class="jumbotron">
                     
                 </div>
-                <div id="card-info"></div>
                 <div id="card-game">
                     
                         <form class="form-game-pmeter">
@@ -85,7 +86,7 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
-                                    <div class="form-group hide">
+                                    <div class="form-group hide owner-game">
                                         <label for="vote-total">Voto Total</label>
                                         <div class="row">
                                             <div class="col-xs-6">
@@ -110,8 +111,8 @@
                             <input type="hidden" name="poker_id" value="{{ data.poker.id }}" />
                             <button class="btn btn-success" id="btn-vote">Votar</button>
                             <span class="owner-game" >
-<!--                                <button class="btn btn-primary" id="btn-pular">Pular</button>-->
-                                <button class="btn btn-primary" id="btn-fechar">Fechar</button>                                
+                                <button class="btn btn-primary" id="btn-voto-total">Pontuação do card</button>
+                                <button class="btn btn-primary" id="btn-regame">Jogar Novamente</button>                                
                             </span>
                         </form>
                     
@@ -124,6 +125,15 @@
                 {% for user in data.users %}
                 <li class="status-{{ user.logged == 1 ? 'on' : 'off' }}" data-id-member="{{ user.member_id }}">
                     {{ user.fullname }}
+                </li>
+                {% endfor %}
+            </ul>
+            <hr>
+            <h3>Cards</h3>
+            <ul id="finish-cards">
+                {% for card in data.cards %}
+                <li  data-id-card-finish="{{ card.card_id }}" data-id-card="{{ card.id }}" data-card-vote="{{ card.pontuacao }}">
+                    
                 </li>
                 {% endfor %}
             </ul>

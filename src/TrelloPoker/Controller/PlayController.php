@@ -16,7 +16,7 @@ class PlayController extends BaseController
     
     public function get($idCrypt) 
     {
-        $id = $this->_model->deCryptId($idCrypt);
+        $id = $this->_model->deCryptId($idCrypt);        
         $data = $this->_model->getPlanningPoker($id);
         echo $this->_twig->render('play/index.phtml', array('data' => $data));
     }

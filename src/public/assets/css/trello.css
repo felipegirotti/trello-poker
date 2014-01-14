@@ -51,3 +51,13 @@ body .vote-card.col-lg-2 {
 .owner-game {
     display: none;
 }
+
+.circle-poker {
+    border-radius: 70%;
+    height: 40px;
+    background: #28a4c9;
+    font-size: 14px;
+    text-align: center;
+    margin: 14px 0 6px;
+    line-height: 37px;    
+}

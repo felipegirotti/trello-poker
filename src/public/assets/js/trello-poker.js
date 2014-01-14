@@ -4,6 +4,10 @@ $(function() {
             return false;
         }
     });
+    $('#btn-logout').live('click', function(){
+       Trello.deauthorize();
+       location.href = '/';
+    });
 });
 
 
@@ -17,7 +21,7 @@ TrelloPoker.prototype = {
         var parentThis = this;
         Trello.authorize({
             name: 'Trello Poker',
-            scope: {read: 'allowRead', write: 'allowWrite'},
+            scope: {read: true, write: true},
             success: function() {                
                 obj.init();
                 parentThis.getUser(obj);
@@ -37,6 +41,7 @@ TrelloPoker.prototype = {
                 html += ' - <img class="member-avatar" height="30" width="30" \n\
 					 src="https://trello-avatars.s3.amazonaws.com/' + responseUser.avatarHash + '/30.png" >';
             }
+            html += '<span class="btn btn-primary btn-mini" id="btn-logout">Sair</span>';
             $('.trello-user').html(html);
             $('#my-pokers-link').attr('href', '/my/' + responseUser.id );
             $('#data-user').attr('data-user', JSON.stringify(responseUser));

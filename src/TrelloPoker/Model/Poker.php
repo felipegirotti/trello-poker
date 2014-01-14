@@ -6,9 +6,11 @@ use Respect\Validation\Validator as v;
 
 class Poker extends BaseModel 
 {
+    const STATUS_ATIVO = 1;
+    const STATUS_INATIVO = 0;
     
     public function insertPoker(array $data)
-    {
+    {                
         $conn = $this->_db->getConnection();
         try {
             $dateNow = date('Y-m-d H:i:s');
@@ -31,7 +33,8 @@ class Poker extends BaseModel
                 $dataCard = array(
                     'poker_id' => $poker['id'],
                     'card_id' => $card,
-                    'pontuacao' => 0
+                    'pontuacao' => 0,
+                    'status' => self::STATUS_ATIVO
                 );
                 $this->_db->insertInto('card', $dataCard)
                         ->values($dataCard)
@@ -39,19 +42,20 @@ class Poker extends BaseModel
             }
             
             $totalMembers = count($data['member']);
-            $data['member'][$totalMembers] = $data['user-id'];
-            $data['name-member'][$totalMembers] = $data['user-name'];
+            $data['member'][$totalMembers] = '{"id" : "' . $data['user-id'] . '", "name" : "' . $data['user-name']  . '"}';               
             // inserindo os membros 
-            foreach ($data['member'] as $key => $member) {
+            foreach ($data['member'] as $value) {
+                $member = json_decode($value);
                 $dataMember = array(
                     'poker_id' => $poker['id'],
-                    'member_id' => $member,
-                    'fullname' => $data['name-member'][$key],
-                );
+                    'member_id' => $member->id,
+                    'fullname' => $member->name,
+                    'logged' => self::STATUS_INATIVO,
+                );                
                 $this->_db->insertInto('membro', $dataMember)
                         ->values($dataMember)
                         ->exec();
-            }
+            }                                  
             $conn->commit();
             $link = '/poker/play/' . base64_encode($poker['id'] . '|' . $dateNow);
             $response = array(
@@ -62,7 +66,7 @@ class Poker extends BaseModel
             
             return $response;
 
-        } catch (\Exception $e) {
+        } catch (\Exception $e) {            
             $conn->rollback();            
             throw new \Exception('Houve um erro durante a inserção do poker');
         }
@@ -91,12 +95,13 @@ class Poker extends BaseModel
             'users' => array(),
             'poker' => new \stdClass(),
             'card' => new \stdClass(),
+            'cards_finish' => array(),
             'votes' => array()
         );
-        $data['card'] = $this->_mapper->card(array('poker_id' => $id, 'pontuacao' => '0'))->poker->fetch();        
+        $data['card'] = $this->_mapper->card(array('poker_id' => $id, 'status' => self::STATUS_ATIVO))->fetch();        
         $data['users'] = $this->_mapper->membro(array('poker_id' => $id))->fetchAll();
-        $data['poker'] = $data['card']->poker_id;
-        
+        $data['poker'] = $this->_mapper->poker[$id]->fetch();
+        $data['cards'] = $this->_mapper->card(array('poker_id' => $id))->fetchAll();        
         return $data;
     }
     
@@ -112,6 +117,7 @@ class Poker extends BaseModel
         $membro = $this->_mapper->membro(array('poker_id' => $data['poker_id'], 'member_id' => $data['member_id']))->fetch();
         if ($membro) {
             $membro->logged = 1;
+            $membro->update_page = 0;
             $membro->updated_at = date('Y-m-d H:i:s');
             $this->_mapper->membro->persist($membro);
             $this->_mapper->flush();
@@ -123,7 +129,7 @@ class Poker extends BaseModel
         
         $this->_conn= $this->_db->getConnection();
        
-        $sql = "SELECT mhc.*, mem.id, mem.member_id, mem.fullname, mem.updated_at FROM membro mem "
+        $sql = "SELECT mhc.*, mem.id, mem.member_id, mem.fullname, mem.updated_at, mem.logged FROM membro mem "
                 . "  LEFT JOIN membro_has_card mhc ON mem.id = mhc.membro_id AND mhc.card_id = ? "
                 . " WHERE  "
                 . " mem.poker_id = ? ";        
@@ -146,8 +152,14 @@ class Poker extends BaseModel
                 }
             }
         }
+        $card = $this->_mapper->card[$data['card_id']]->fetch();
+        $response = array(
+            'users' => $newUsers,
+            'pontuacao' => $card->pontuacao,
+            'status' => $card->status
+        );        
         $this->updateLoggedUser($data);
-        return $newUsers;
+        return $response;
     }
     
     /**
@@ -162,6 +174,7 @@ class Poker extends BaseModel
         $dataLastUp = new \DateTime($membro->updated_at);
         $dateNow = new \DateTime();
         $interval = $dateNow->getTimestamp() - $dataLastUp->getTimestamp();
+        $membro->logged = $membro->logged ?: 0;
         if ($interval > 60) {
             $membro->logged = 0;
             $user = $this->_mapper->membro[$membro->id]->fetch();
@@ -206,18 +219,53 @@ class Poker extends BaseModel
         if ( ! $validate)
             throw new \InvalidArgumentException('Parâmetros inválidos');
         
-        $card = $this->_mapper
-                    ->card[$data['card_id']]
-                    ->poker()
-                    ->fetch();
-        if ($card->poker_id->member_id != $data['member_id'])
-            throw new \InvalidArgumentException('Usuário não é dono do game para finalizar');
+        $this->isOwnerGame($data['card_id'], $data['member_id']);
         
-        $card->pontuacao = $data['pontuacao'];        
+        $card->pontuacao = $data['pontuacao'];
+        $card->updated_at = date('Y-m-d H:i:s'); 
+        $card->status = self::STATUS_INATIVO;
         $this->_mapper->card->persist($card);
         $this->_mapper->flush();
         return $card->card_id;
     }
     
+    private function isOwnerGame($cardId, $memberId)
+    {
+        $card = $this->_mapper
+                    ->card[$cardId]
+                    ->poker()
+                    ->fetch();
+        if ($card->poker_id->member_id != $memberId)
+            throw new \InvalidArgumentException('Usuário não é dono do game para finalizar');
+        return true;
+    }
+    
+    public function regame(array $data) 
+    {
+        $validate = v::arr()
+                        ->key('card_id', v::string()->notEmpty())
+                        ->key('poker_id', v::string()->notEmpty())
+                        ->key('member_id', v::string()->notEmpty());
+        if ( ! $validate) 
+            throw new Exception('Parâmetros inválidos');
         
+        $this->isOwnerGame($data['card_id'], $data['member_id']);
+        
+        $membroHasCards = $this->_mapper->membro_has_card(array('card_id' => $data['card_id']))->card()->fetchAll();
+        try {
+            $this->_conn = $this->_db->getConnection();
+            $this->_conn->beginTransaction();
+            foreach ($membroHasCards as $card) {
+                var_dump($card);die;
+                $stmt = $this->_conn->prepare('DELETE FROM membro_has_card WHERE card_id = ?');
+                $stmt->execute(array($card->card_id));
+                //$stmt = $this->_conn->prepare('UPDATE FROM membro WHERE card_id');
+            }
+            $this->_conn->commit();
+        } catch (\Exception $e) {
+            $this->_conn->rollBack();
+            throw new \Exception('Houve um erro durante o regame');
+        }
+            
+    }
 }

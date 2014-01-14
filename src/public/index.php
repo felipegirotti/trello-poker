@@ -45,6 +45,14 @@ $router->post('/poker/play/close', function() use($model) {
     }
 });
 
+$router->post('/poker/play/regame', function() use ($model) {
+   $data = $_POST;
+   try {
+       $regame = $model->regame($data);
+   } catch (\Exception $e) {
+       Functions::headerException($e);
+   }
+});
 
 
 
