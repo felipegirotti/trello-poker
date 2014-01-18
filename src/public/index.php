@@ -51,12 +51,14 @@ $router->post('/poker/play/regame', function() use ($model) {
        $regame = $model->regame($data);
        if ($regame) {
            Functions::headerHttpCode(202);
-           Functions::renderJson(array('success' => array('mensagem' => 'Regame com sucesso', 'code' => 202)));
+           Functions::renderJson(array('success' => array('message' => 'Regame com sucesso', 'code' => 202)));
        }
    } catch (\Exception $e) {
        Functions::headerException($e);
    }
 });
+
+$router->any('/poker/play/add-user/*', 'TrelloPoker\Controller\PlayAddUserController', $configController);
 
 
 

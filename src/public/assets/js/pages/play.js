@@ -31,7 +31,11 @@ $(function() {
     $('.form-game-pmeter').live('submit', function(e) {
         e.preventDefault();        
         return false;
-    });            
+    });         
+    
+    $('.btn-remove-user').live('click', function(){
+        TrelloPokerPlay.removeUser($(this).parent().attr('data-id-member'));
+    });
     
     setInterval(function(){
         TrelloPokerPlay.getUsers()
@@ -75,7 +79,8 @@ TrelloPokerPlay = {
             if (reloadPage.length > 0) {
                 location.reload();
             }
-            var objHtml = TrelloRender.renderUsersPlay(response, TrelloPokerPlay.user.id);
+            var isOwner = TrelloPokerPlay.isOwner();
+            var objHtml = TrelloRender.renderUsersPlay(response, TrelloPokerPlay.user.id, isOwner);
             $('#users').html(objHtml.users);
             $('#card-game-vote').html(objHtml.votes);
             $('#btn-voto-total').attr('disabled', true);
@@ -95,10 +100,18 @@ TrelloPokerPlay = {
                 $('#btn-voto-total').attr('disabled', true);
                 $('#btn-fechar').attr('disabled', false);
             }
-            if (response.status == 0 && !this.isOwner()) {
-                location.reload();
-            }
+            if (response.status == 0 && !isOwner) 
+                location.reload();            
             
+            if (isOwner) {
+                var pokerId = $('input[name=poker_id]').val();
+                $('#usuarios-name').html('Usuários <a href="/poker/play/add-user/'+ pokerId +'" id="btn-add-user"><i class="glyphicon glyphicon-plus-sign btn-add-user"></i></a>');                        
+                $('#btn-add-user').colorbox({
+                    iframe: true,
+                    width: '300',
+                    height: '250'
+                });
+            }
         });
     },
     getCard: function(idCard) {
@@ -176,6 +189,24 @@ TrelloPokerPlay = {
             $.post('/poker/play/regame', dataPost, function(response) {                
                 if (response.success && response.success.code == 202) {
                     location.reload();
+                }
+            });
+        }
+    },
+    removeUser: function(memberId) {
+        if (this.isOwner()) {
+            var dataPost = {
+                poker_id: $('input[name="poker_id"]').val(),
+                member_id: memberId,
+                owner: TrelloPokerPlay.user.id
+            };
+            $.ajax({
+                url: '/poker/play/add-user/' + dataPost.poker_id,
+                type: 'DELETE',
+                dataType: 'json',
+                data: dataPost,
+                complete: function(response) {
+                    TrelloPokerPlay.getUsers();
                 }
             });
         }

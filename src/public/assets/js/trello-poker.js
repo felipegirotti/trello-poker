@@ -84,7 +84,7 @@ TrelloPoker.prototype = {
                         <input type="hidden" name="user-id" value="'+ this.user.id +'" />\n\
                         <input type="hidden" name="user-name" value="'+ this.user.fullName +'" />\n\
                     </div>');
-            elementAppend.append('<button class="btn btn-primary add-to-poker">Adicionar para o poker</button>');
+            elementAppend.append('<button class="btn btn-primary add-to-poker">Adicionar para o Game</button>');
             this.getMembers(idBoard, elementAppend.find('.col-lg-6:last'));
             this.getCards(idBoard, elementAppend.find('.col-lg-6:first'));
             console.log('Criar');

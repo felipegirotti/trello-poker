@@ -44,18 +44,7 @@ class Poker extends BaseModel
             $totalMembers = count($data['member']);
             $data['member'][$totalMembers] = '{"id" : "' . $data['user-id'] . '", "name" : "' . $data['user-name']  . '"}';               
             // inserindo os membros 
-            foreach ($data['member'] as $value) {
-                $member = json_decode($value);
-                $dataMember = array(
-                    'poker_id' => $poker['id'],
-                    'member_id' => $member->id,
-                    'fullname' => $member->name,
-                    'logged' => self::STATUS_INATIVO,
-                );                
-                $this->_db->insertInto('membro', $dataMember)
-                        ->values($dataMember)
-                        ->exec();
-            }                                  
+            $this->addMember($data['member'], $poker['id']);                                  
             $conn->commit();
             $link = '/poker/play/' . base64_encode($poker['id'] . '|' . $dateNow);
             $response = array(
@@ -71,6 +60,30 @@ class Poker extends BaseModel
             throw new \Exception('Houve um erro durante a inserção do poker');
         }
     }
+	
+	/**
+	 * Adicionar membros ao card
+	 * 
+	 * @param array $dataMembers Dados dos membros
+	 * @param integer $idPoker ID do poker game
+	 * @return boolean
+	 */
+	private function addMember(array $dataMembers, $idPoker)
+	{
+		foreach ($dataMembers as $value) {
+			$member = json_decode($value);
+			$dataMember = array(
+				'poker_id' => $idPoker,
+				'member_id' => $member->id,
+				'fullname' => $member->name,
+				'logged' => self::STATUS_INATIVO,
+			);
+			$this->_db->insertInto('membro', $dataMember)
+				->values($dataMember)
+				->exec();
+		}
+		return true;
+	}
     
     public function myPokers($memberId)
     {
@@ -270,4 +283,41 @@ class Poker extends BaseModel
         }
             
     }
+	
+	/**
+	 * API publica para adicionar membros ao game
+	 * 
+	 * @param array $data Dados para inserção dos membros ao game
+	 * @param integer $idPoker ID do poker
+	 * @return boolean
+	 * @throws \InvalidArgumentException
+	 */
+	public function addUserForPoker(array $data, $idPoker)
+	{
+		$poker = $this->_mapper->poker[$idPoker]->fetch();
+		if (!$poker)
+			throw new \InvalidArgumentException('Número do game não encontrado');
+		if ($poker->member_id != $data['member_id'])
+			throw new \InvalidArgumentException('Você não é o dono do game');
+		
+		return $this->addMember($data['member'], $idPoker);
+	}
+	
+	public function removeUser(array $data, $idPoker)
+	{
+		$poker = $this->_mapper->poker[$idPoker]->fetch();
+		if (!$poker)
+			throw new \InvalidArgumentException('Número do game não encontrado');
+		if ($poker->member_id != $data['owner'])
+			throw new \InvalidArgumentException('Você não é o dono do game');
+		
+		$member = $this->_mapper->membro(array('member_id' => $data['member_id'], 'poker_id' => $idPoker))->fetch();
+		if (!$member)
+			throw new \InvalidArgumentException('Não foi encontrado o membro');
+		
+		$this->_mapper->membro->remove($member);
+		$this->_mapper->flush();
+		return true;
+	}
+	
 }

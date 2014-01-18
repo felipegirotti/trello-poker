@@ -1,7 +1,12 @@
 {% extends "template/base.phtml" %}
+{% block stylesheet %}
+    {{ parent() }}
+		<link rel="stylesheet" type="text/css" href="/assets/css/colorbox.css" />		
+{% endblock %}
 {% block scriptjs %}
     {{ parent() }}
     <script src="/assets/js/pages/play.js"></script>
+    <script src="/assets/js/jquery.colorbox-min.js"></script>
 {% endblock %}
 {% block title %}Trello Poker | {{ data.poker.nome }}{% endblock %}
 {% block container %}
@@ -120,7 +125,7 @@
             </div>
         </div>
         <div class="col-lg-4">
-            <h3>Usuários</h3>
+            <h3 id="usuarios-name">Usuários</h3>
             <ul id="users">
                 {% for user in data.users %}
                 <li class="status-{{ user.logged == 1 ? 'on' : 'off' }}" data-id-member="{{ user.member_id }}">
@@ -141,7 +146,7 @@
     </div>
     <hr>
 </div>
-<input type="hidden" id="id-owner" value="{{ data.poker.member_id }}"
+<input type="hidden" id="id-owner" value="{{ data.poker.member_id }}" />
 {% endblock %}
 
 

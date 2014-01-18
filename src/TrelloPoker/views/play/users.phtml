@@ -1,0 +1,18 @@
+{% extends "template/colorbox.phtml" %}
+
+{% block container %}
+<form id="form-user">
+    <h3>Membros</h3>
+	<div id="members"></div>
+    <input type="hidden" id="board_id" value="{{ poker.board_id }}" />    
+	<input type="hidden" name="member_id" id="member_id" value="" />
+	<button class="btn btn-primary hidden" id="btn-add-user">Adicionar</button>
+</form>
+<input type="hidden" id="id-owner" value="{{ poker.member_id }}" />
+<script>
+    {% autoescape false %} 
+    var membros = {{ users }}
+    {% endautoescape %}
+</script>
+<script src="/assets/js/pages/users.js"></script>
+{% endblock %}

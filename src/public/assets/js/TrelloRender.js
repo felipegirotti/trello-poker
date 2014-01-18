@@ -28,13 +28,18 @@ TrelloRender = {
         var html = { users: '', votes : '<div class="row">', totalUsers: 0, totalVotes : 0, memberIsVoted: false};
         html.totalUsers = dataUsers.users.length;
         html.totalVotes = dataUsers.users.filter(function(objUser) {return objUser.pontuacao !== null}).length;
-        console.log(html.totalUsers, html.totalVotes);
+        
         for (var index in dataUsers.users) {
-            var user = dataUsers.users[index];
-            var status = user.logged == 0 ? 'off' : 'on';
-            var memberIsVoted = (memberId == user.member_id);
-            var votes = this.renderVoteCard(user, html.totalUsers == html.totalVotes, memberIsVoted);
-            html.users += '<li class="status-'+ status +'" data-id-member="'+ user.member_id +'">'+ user.fullname +'</li>';            
+            var user, status, memberIsVoted, votes;
+            user = dataUsers.users[index];
+            status = user.logged == 0 ? 'off' : 'on';
+            memberIsVoted = (memberId == user.member_id);
+            votes = this.renderVoteCard(user, html.totalUsers == html.totalVotes, memberIsVoted);
+            html.users += '<li class="status-'+ status +'" data-id-member="'+ user.member_id +'">';
+            html.users += user.fullname;
+            if (isOwner && !memberIsVoted)
+                html.users += ' <i class="glyphicon glyphicon-remove-circle btn-remove-user"></i>'
+            html.users += '</li>';
             if (votes !== null) {
                 html.votes += votes;                
                 if (memberIsVoted) {
