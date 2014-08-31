@@ -12,11 +12,11 @@ class PlayDataController extends BaseController
      *
      * @var \TrelloPoker\Model\Poker 
      */
-    protected $_model = 'TrelloPoker\Model\Poker';
+    protected $model = 'TrelloPoker\Model\Poker';
     
-    public function get($idCrypt) 
+    public function get($idCrypt)
     {
-        $id = $this->_model->deCryptId($idCrypt);
-        Functions::renderJson($this->_model->getPlanningPoker($id));
+        $id = $this->model->deCryptId($idCrypt);
+        Functions::renderJson($this->model->getPlanningPoker($id));
     }
 }

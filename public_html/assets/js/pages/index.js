@@ -3,7 +3,7 @@ $(function() {
     trelloPoker = new TrelloPoker();
     trelloPoker.authorize(TrelloPokerIndex);
     //EVENTO DE CLICK NO BOARD
-    $('#boards a').live('click', function(e) {
+    $('#boards a.board').live('click', function(e) {
         e.preventDefault();
         trelloPoker.cardsMembers(this.id, $(this));
         return false;
@@ -13,39 +13,44 @@ $(function() {
         var error;
         error = [];
         $(this).find('div.error').remove();
-        //VALIDAR CARDS
+        //VALIDATE CARDS
         if (!$(this).find('input[name="card[]"]').is(':checked')) {
-            error.push(' Selecione ao menos um card para o poker');
+            error.push(' Please select cards of the game');
         }
-        //VALIDAR USUARIOS
+        //VALIDATE USUARIOS
         if (!$(this).find('input[name="member[]"]').is(':checked')) {
-            error.push(' Selecione ao menos um membro para o poker');
+            error.push(' Please select members for game');
         }
         if (error.length > 0) 
             $(this).find('button').before('<div class="error alert alert-danger" style="margin-top:10px">'+ error.join('<br />') +'</div>');
-        else 
+        else
             TrelloPokerIndex.addToPoker($(this));
         return false;
     });
 });
 
-TrelloPokerMyPokers = {
+TrelloPokerIndex = {
     trelloVisible: $('.trello-visible'),
     init: function() {
         console.log('Autorizado? ', Trello.authorized());
         if (!Trello.authorized()) {
-            TrelloPokerMyPokers.trelloVisible.hide();
+            TrelloPokerIndex.trelloVisible.hide();
         } else {
-            TrelloPokerMyPokers.trelloVisible.show();
-            //CARREGANDO OS BOARDS
-            TrelloPokerMyPokers.myBoards();            
+            TrelloPokerIndex.trelloVisible.show();
+            //LOADING  BOARDS
+            trelloPoker.getBoards();            
         }
     },
-    myBoards: function() {
+    addToPoker: function(form) {
         var data;
         data = form.serialize();
-        $.post('/poker/add', data, function(response) {
-            form.empty().remove();
+        $.post('/poker/add', data, function(response, a, b) {
+            form.empty();
+            var msg = 'Ops! There was an error, try again';
+            if (response.success) {
+                msg = '<div class="alert alert-success">' + response.success.message + '</div>';
+            }
+            form.html(msg);
         });
     }
 };

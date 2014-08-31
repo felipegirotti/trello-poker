@@ -12,24 +12,34 @@ class BaseModel
      *
      * @var \Respect\Relational\Mapper
      */
-    protected $_mapper;
+    protected $mapper;
     
     /**
      *
      * @var \Respect\Relational\Db
      */
-    protected $_db;
+    protected $db;
     
     /**
      *
      * @var \PDO
      */
-    protected $_conn;
+    protected $conn;
+
+    /**
+     *
+     * @var \Respect\Config\Container
+     */
+    protected $config;
         
-    public function __construct(\Respect\Relational\Mapper $mapper,
-        \Respect\Relational\Db $db) {
-        $this->_mapper = $mapper;
-        $this->_db = $db;
+    public function __construct(
+        \Respect\Relational\Mapper $mapper,
+        \Respect\Relational\Db $db,
+        \Respect\Config\Container $config
+    ) {
+        $this->mapper = $mapper;
+        $this->db = $db;
+        $this->config = $config;
     }
     
 }

@@ -27,52 +27,52 @@
                 <div id="card-game">
                     
                         <form class="form-game-pmeter">
-                            <div class="form-group">
-                                <label for="dificuldade">Dificuldade Inerente - Dificuldade ou complexidade de implementação</label>
-                                <div class="row">
-                                    <div class="col-xs-3">
-                                        <select name="dificuldade" id="dificuldade" class="form-control require">
-                                            <option value="">Selecione</option>
-                                            <option value="0">0 - Nenhum</option>
-                                            <option value="1">1 - Baixo</option>
-                                            <option value="2">2 - Médio</option>
-                                            <option value="3">3 - Alto</option>
-                                        </select>                                        
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="linhas">Número de Linhas - Número de Linhas a serem codificadas</label>
-                                <div class="row">
-                                    <div class="col-xs-3">
-                                        <select name="linhas" id="linhas" class="form-control require">
-                                            <option value="">Selecione</option>
-                                            <option value="0">0 - Nenhum</option>
-                                            <option value="1">1 - Baixo</option>
-                                            <option value="2">2 - Médio</option>
-                                            <option value="3">3 - Alto</option>
-                                        </select>                                        
-                                    </div>                                    
-                                </div>                                
-                            </div>
-                            <div class="form-group">
-                                <label for="impacto">Impacto - Impacto no funcionando de funcionalidades pré-existentes e/ou na novas</label>
-                                <div class="row">
-                                    <div class="col-xs-3">
-                                        <select name="impacto" id="impacto" class="form-control require">
-                                            <option value="">Selecione</option>
-                                            <option value="0">0 - Nenhum</option>
-                                            <option value="1">1 - Baixo</option>
-                                            <option value="2">2 - Médio</option>
-                                            <option value="3">3 - Alto</option>
-                                        </select>                                        
-                                    </div>                                        
-                                </div>
-                            </div>
+<!--                            <div class="form-group">-->
+<!--                                <label for="dificuldade">Dificuldade Inerente - Dificuldade ou complexidade de implementação</label>-->
+<!--                                <div class="row">-->
+<!--                                    <div class="col-xs-3">-->
+<!--                                        <select name="dificuldade" id="dificuldade" class="form-control require">-->
+<!--                                            <option value="">Selecione</option>-->
+<!--                                            <option value="0">0 - Nenhum</option>-->
+<!--                                            <option value="1">1 - Baixo</option>-->
+<!--                                            <option value="2">2 - Médio</option>-->
+<!--                                            <option value="3">3 - Alto</option>-->
+<!--                                        </select>                                        -->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="form-group">-->
+<!--                                <label for="linhas">Número de Linhas - Número de Linhas a serem codificadas</label>-->
+<!--                                <div class="row">-->
+<!--                                    <div class="col-xs-3">-->
+<!--                                        <select name="linhas" id="linhas" class="form-control require">-->
+<!--                                            <option value="">Selecione</option>-->
+<!--                                            <option value="0">0 - Nenhum</option>-->
+<!--                                            <option value="1">1 - Baixo</option>-->
+<!--                                            <option value="2">2 - Médio</option>-->
+<!--                                            <option value="3">3 - Alto</option>-->
+<!--                                        </select>                                        -->
+<!--                                    </div>                                    -->
+<!--                                </div>                                -->
+<!--                            </div>-->
+<!--                            <div class="form-group">-->
+<!--                                <label for="impacto">Impacto - Impacto no funcionando de funcionalidades pré-existentes e/ou na novas</label>-->
+<!--                                <div class="row">-->
+<!--                                    <div class="col-xs-3">-->
+<!--                                        <select name="impacto" id="impacto" class="form-control require">-->
+<!--                                            <option value="">Selecione</option>-->
+<!--                                            <option value="0">0 - Nenhum</option>-->
+<!--                                            <option value="1">1 - Baixo</option>-->
+<!--                                            <option value="2">2 - Médio</option>-->
+<!--                                            <option value="3">3 - Alto</option>-->
+<!--                                        </select>                                        -->
+<!--                                    </div>                                        -->
+<!--                                </div>-->
+<!--                            </div>-->
                             <div class="row">
                                 <div class="col-lg-4">
                                     <div class="form-group">
-                                        <label for="vote">Voto</label>
+                                        <label for="vote">Your Vote</label>
                                         <div class="row">
                                             <div class="col-xs-6">
                                                 <select id="vote" name="vote" class="form-control require">
@@ -92,7 +92,7 @@
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group hide owner-game">
-                                        <label for="vote-total">Voto Total</label>
+                                        <label for="vote-total">Total Vote</label>
                                         <div class="row">
                                             <div class="col-xs-6">
                                                 <select id="vote-total" name="vote-total" class="form-control ">
@@ -114,10 +114,10 @@
                             
                             <input type="hidden" name="card_id" value="{{ data.card.id }}" />
                             <input type="hidden" name="poker_id" value="{{ data.poker.id }}" />
-                            <button class="btn btn-success" id="btn-vote">Votar</button>
+                            <button class="btn btn-success" id="btn-vote">Vote</button>
                             <span class="owner-game" >
-                                <button class="btn btn-primary" id="btn-voto-total">Pontuação do card</button>
-                                <button class="btn btn-primary" id="btn-regame">Jogar Novamente</button>                                
+                                <button class="btn btn-primary" id="btn-voto-total">Total vote of the card</button>
+                                <button class="btn btn-primary" id="btn-regame">Regame</button>
                             </span>
                         </form>
                     
@@ -125,7 +125,7 @@
             </div>
         </div>
         <div class="col-lg-4">
-            <h3 id="usuarios-name">Usuários</h3>
+            <h3 id="usuarios-name">Members</h3>
             <ul id="users">
                 {% for user in data.users %}
                 <li class="status-{{ user.logged == 1 ? 'on' : 'off' }}" data-id-member="{{ user.member_id }}">

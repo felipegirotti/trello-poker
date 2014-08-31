@@ -2,12 +2,11 @@
 
 namespace TrelloPoker\Controller;
 
-class HomeController extends BaseController 
+class HomeController extends BaseController
 {
     
     public function get()
     {
-        echo $this->_twig->render('home/index.phtml');
-    }    
+        echo $this->twig->render('home/index.phtml');
+    }
 }
-
