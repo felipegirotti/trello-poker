@@ -10,6 +10,10 @@
 		"pdr-0" : {"TrelloPoker" : "src/"}
 	},
 	"require" : {
-		"respect/config": "dev-master"
+		"respect/config": "dev-master",
+        "respect/validation": "0.7.*@dev",
+        "respect/relational": "dev-master",
+        "respect/rest": "dev-master",
+        "twig/twig": "1.16.*@dev"
 	}
 }
