@@ -62,19 +62,21 @@ TrelloPoker.prototype = {
         });
     },
     cardsMembers: function(idBoard, element) {
-        var elementAppend, htmlInnerForm, elementForm;
+        var elementAppend, htmlInnerForm, elementForm, prependPainel;
+        prependPainel = '<div class="panel panel-info"><div class="panel-heading"><h3 class="panel-title">Options for game</h3> </div> <div class="panel-body">';
         elementForm = element.next('form.form-add-to-poker');
-        htmlInnerForm = '<div id="cards-' + idBoard + '"><div class="row"><div class="col-lg-6"></div><div class="col-lg-6"></div></div></div>';
+        htmlInnerForm = '<div id="cards-' + idBoard + '">'
+            + '<div class="row"><div class="col-lg-6"></div><div class="col-lg-6"></div></div></div>';
         if (elementForm.length == 0) {
-            element.after('<form class="form-add-to-poker" data-id-board="' + idBoard + '">'+ htmlInnerForm +'</form>');
+            element.after('<form class="form-add-to-poker" data-id-board="' + idBoard + '">'+ prependPainel + htmlInnerForm +'</div></div></form>');
             elementForm = element.next('form');
         } else if (elementForm.length > 0
              && elementForm.find('div#cards-' + idBoard).length == 0) {
-            elementForm.html(htmlInnerForm);           
+            elementForm.html(prependPainel + htmlInnerForm);
         }
         
         if (elementForm.length > 0 && elementForm.find('input[type="checkbox"]').length == 0) {
-            elementAppend = element.next('form').children('div');
+            elementAppend = element.next('form').find('div.panel-body');
             elementAppend.append('<div class="row">\n\
                         <div class="form-group col-lg-4"> \n\
                             <label for="nome-' + idBoard + '">Name of the game</label>\n\
