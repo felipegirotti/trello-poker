@@ -7,7 +7,7 @@
 		}
 	],
 	"autoload" : {
-		"pdr-0" : {"TrelloPoker" : "src/"}
+		"psr-0" : {"TrelloPoker" : "src/"}
 	},
 	"require" : {
 		"respect/config": "dev-master",
